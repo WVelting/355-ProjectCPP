@@ -17,10 +17,17 @@ ADoor::ADoor()
 	TheMeshDoor = CreateDefaultSubobject<UStaticMeshComponent>(FName("TheMeshDoor"));
 	TheMeshDoor->SetupAttachment(TheHinge);
 
+	/*TheBox = CreateDefaultSubobject<UBoxComponent>(FName("TheBox"));
+	TheBox->SetupAttachment(TheRoot);
+	TheBox->SetBoxExtent(FVector(WidthOfDoor+100, DepthOfDoor+50, HeightOfDoor+100)/2);
+	TheBox->SetRelativeLocation(FVector(0, 0, HeightOfDoor/2));*/
+
 	TheMeshFrame = CreateDefaultSubobject<UInstancedStaticMeshComponent>(FName("TheMeshFrame"));
 	TheMeshFrame->SetupAttachment(TheRoot);
 
 	DoorTimelineComp = CreateDefaultSubobject<UTimelineComponent>(FName("DoorTimelineComp"));
+
+
 
 
 	ConstructorHelpers::FObjectFinder<UStaticMesh> TheCubeMesh(TEXT("/Game/Art/Meshes/1M_Cube"));
@@ -36,6 +43,8 @@ ADoor::ADoor()
 void ADoor::UpdateTimelineComp(float Output)
 {
 	FRotator DoorNewRotation = FRotator(0, Output, 0);
+
+	if (IsDoorFlipped) DoorNewRotation.Yaw *= -1;
 	TheHinge->SetRelativeRotation(DoorNewRotation);
 }
 
@@ -75,6 +84,40 @@ void ADoor::Interact()
 {
 	if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Red, "Player wants to Interact");
 
-	DoorTimelineComp->Play();
+	//determine what side the player is on
+	//to set IsDoorFlipped
+
+	//use math!
+
+	ACharacter* Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+
+	FVector VecToDoor = GetActorLocation() = Player->GetActorLocation();
+	VecToDoor.Normalize();
+
+	
+
+	float align = FVector::DotProduct(VecToDoor, GetActorRightVector());
+	
+	
+	IsDoorFlipped = (align < 0);
+	
+
+	if (!DoorOpen)
+	{
+	
+
+		DoorTimelineComp->Play();
+		DoorOpen = true;
+	}
+
+	else
+	{
+		
+		DoorTimelineComp->Reverse();
+		DoorOpen = false;
+	}
+
+
+	
 }
 

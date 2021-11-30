@@ -8,6 +8,8 @@
 #include "UObject/ConstructorHelpers.h"
 #include "InteractableObject.h"
 #include "Components/TimelineComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/Character.h"
 
 #include "Door.generated.h"
 
@@ -29,6 +31,9 @@ public:
 	//scene component for hinge
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	USceneComponent* TheHinge;
+
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	class UBoxComponent* TheBox;*/
 	
 	// mesh for door
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
@@ -48,6 +53,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	UCurveFloat* DoorTimelineFloatCurve;
 
+	UPROPERTY(EditAnywhere)
+	bool DoorOpen;
+
 	
 	//collider
 
@@ -61,6 +69,9 @@ protected:
 
 	UFUNCTION()
 	void UpdateTimelineComp(float Output);
+
+	UPROPERTY(EditAnywhere, Category = "Door Settings")
+	bool IsDoorFlipped = false;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
