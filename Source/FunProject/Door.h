@@ -6,13 +6,15 @@
 #include "GameFramework/Actor.h"
 
 #include "UObject/ConstructorHelpers.h"
+#include "InteractableObject.h"
+#include "Components/TimelineComponent.h"
 
 #include "Door.generated.h"
 
 
 
 UCLASS()
-class FUNPROJECT_API ADoor : public AActor
+class FUNPROJECT_API ADoor : public AActor, public IInteractableObject
 {
 	GENERATED_BODY()
 
@@ -43,14 +45,26 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Door Settings")
 	float DepthOfDoor = 25;
 
+	UPROPERTY(EditAnywhere)
+	UCurveFloat* DoorTimelineFloatCurve;
+
 	
 	//collider
 
 protected:
 	virtual void BeginPlay() override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	class UTimelineComponent* DoorTimelineComp;
+
+	FOnTimelineFloat UpdateFunctionFloat;
+
+	UFUNCTION()
+	void UpdateTimelineComp(float Output);
+
 public:	
 	virtual void Tick(float DeltaTime) override;
 	virtual void OnConstruction(const FTransform& xform) override;
+	virtual void Interact();
 
 };
