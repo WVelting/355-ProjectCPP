@@ -16,6 +16,8 @@ AFunProjectCharacter::AFunProjectCharacter()
 {
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
+	ProjectileToSpawn = nullptr;
+
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
 
@@ -60,11 +62,23 @@ void AFunProjectCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 
 void AFunProjectCharacter::OnInteract()
 {
+	//test?
+
+	if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Green, TEXT("Hello World!"));
 
 }
 
 void AFunProjectCharacter::OnShoot()
 {
+	//spawning objects
+	if (ProjectileToSpawn)
+	{
+
+		FVector pos = GetActorLocation() + GetActorForwardVector()*100;
+
+
+		GetWorld()->SpawnActor<AActor>(ProjectileToSpawn, pos, GetActorRotation());
+	}
 
 }
 

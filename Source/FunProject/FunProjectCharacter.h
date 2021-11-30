@@ -25,6 +25,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combat")
+	TSubclassOf<AActor> ProjectileToSpawn;
+
 protected:
 
 	void MoveForward(float Value);
